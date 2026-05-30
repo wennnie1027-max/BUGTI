@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* 全局 CSS 变量（基准主题） */
+        /* ================= 全局终端 CSS (极客像素风) ================= */
         :root {
             --primary: #00ff41;
             --bg-color: #050505;
@@ -16,14 +16,12 @@
             --font-main: 'VT323', 'Courier New', Courier, monospace;
         }
 
-        /* ====== 7大动态结果主题 ====== */
         body.theme-sike { --primary: #ff5722; --bg-color: #1a0500; --border-glow: rgba(255, 87, 34, 0.5); }
         body.theme-bailan { --primary: #78909c; --bg-color: #080c0f; --border-glow: rgba(120, 144, 156, 0.3); }
         body.theme-kongchang { --primary: #00e5ff; --bg-color: #00111a; --border-glow: rgba(0, 229, 255, 0.5); }
         body.theme-zouxin { --primary: #ff80ab; --bg-color: #1a000d; --border-glow: rgba(255, 128, 171, 0.5); }
         body.theme-ganfan { --primary: #ffea00; --bg-color: #1a1800; --border-glow: rgba(255, 234, 0, 0.5); }
         body.theme-xuanxue { --primary: #d4af37; --bg-color: #121005; --border-glow: rgba(212, 175, 55, 0.5); }
-        /* 隐藏款专属破防 UI */
         body.theme-hidden { 
             --primary: #ff0000; --bg-color: #1a0000; --border-glow: rgba(255, 0, 0, 0.8);
             animation: screen-shake 0.3s infinite;
@@ -44,7 +42,6 @@
             transition: background-color 1.5s ease, color 1.5s ease;
         }
 
-        /* 扫描线效果 */
         body::before {
             content: ""; display: block; position: absolute;
             top: 0; left: 0; bottom: 0; right: 0;
@@ -53,9 +50,8 @@
             z-index: 10; pointer-events: none;
         }
 
-        /* 主终端窗口 */
         .terminal-window {
-            width: 95%; max-width: 900px; height: 85vh; max-height: 700px;
+            width: 95%; max-width: 900px; height: 85vh; max-height: 750px;
             background: rgba(0, 0, 0, 0.7);
             border: 2px solid var(--primary);
             box-shadow: inset 0 0 0 1px var(--border-glow), 0 0 20px var(--border-glow);
@@ -77,7 +73,6 @@
 
         .hidden { display: none !important; }
 
-        /* ======== 阶段一：开场 UI ======== */
         .warning-box {
             border: 1px dashed var(--alert); padding: 15px; margin-bottom: 20px;
             color: var(--alert); background: rgba(255, 49, 49, 0.1);
@@ -91,27 +86,23 @@
             background: transparent; border: 1px solid var(--primary);
             color: var(--primary); padding: 12px 25px;
             font-family: var(--font-main); font-size: 22px;
-            margin-top: 20px; transition: 0.3s; text-transform: uppercase;
+            margin-top: 20px; margin-right: 15px; transition: 0.3s; text-transform: uppercase;
         }
         .btn:hover { background: var(--primary); color: var(--bg-color); box-shadow: 0 0 15px var(--border-glow); }
 
-        /* ======== 阶段二：答题 UI ======== */
-        .progress-wrapper {
-            width: 100%; height: 10px; border: 1px solid var(--primary);
-            margin-bottom: 25px; position: relative;
-        }
-        .progress-bar {
-            height: 100%; background: var(--primary); width: 0%;
-            transition: width 0.4s ease-out;
-        }
+        .ide-btn { background: rgba(255, 255, 255, 0.1); border: 2px solid var(--primary); font-weight: bold; }
+        .ide-btn:hover { background: var(--primary); color: var(--bg-color); }
+
+        .progress-wrapper { width: 100%; height: 10px; border: 1px solid var(--primary); margin-bottom: 25px; position: relative; }
+        .progress-bar { height: 100%; background: var(--primary); width: 0%; transition: width 0.4s ease-out; }
         
         .cmd-line { color: #888; font-size: 18px; margin-bottom: 10px; }
-        #q-text { font-size: 26px; border-bottom: 1px dashed #333; padding-bottom: 15px; margin-bottom: 25px; }
+        #q-text { font-size: 24px; border-bottom: 1px dashed #333; padding-bottom: 15px; margin-bottom: 25px; line-height: 1.4; }
         
         .option-item {
             padding: 15px; border: 1px solid #333; margin-bottom: 15px;
             font-size: 20px; transition: 0.2s; position: relative;
-            background: rgba(255,255,255,0.02);
+            background: rgba(255,255,255,0.02); line-height: 1.4;
         }
         .option-item:hover {
             border-color: var(--primary); padding-left: 30px;
@@ -120,23 +111,137 @@
         .option-item::before { content: "[ ] "; color: #555; transition: 0.2s; }
         .option-item:hover::before { content: "[x] "; color: var(--primary); }
 
-        /* ======== 阶段中间：计算中 UI ======== */
         #calculating { text-align: center; margin-top: 20%; }
         .loader { font-size: 40px; animation: blink 0.8s infinite; }
 
-        /* ======== 阶段三：结果 UI ======== */
-        .result-code {
-            font-size: 36px; background: var(--primary); color: var(--bg-color);
-            padding: 8px 20px; display: inline-block; margin-bottom: 15px;
-            font-weight: bold;
-        }
+        .result-code { font-size: 32px; background: var(--primary); color: var(--bg-color); padding: 8px 20px; display: inline-block; margin-bottom: 15px; font-weight: bold; }
         #res-tags { font-size: 20px; opacity: 0.9; margin-bottom: 15px; letter-spacing: 2px;}
-        #res-quote { font-size: 22px; font-style: italic; border-left: 4px solid var(--primary); padding-left: 15px; margin-bottom: 25px; background: rgba(255,255,255,0.05); padding: 10px 10px 10px 15px;}
+        #res-quote { font-size: 20px; font-style: italic; border-left: 4px solid var(--primary); padding-left: 15px; margin-bottom: 25px; background: rgba(255,255,255,0.05); padding: 10px 10px 10px 15px;}
         #res-desc { font-size: 18px; line-height: 1.6; }
-        
         #radar-container { width: 100%; max-width: 350px; margin: 20px auto; }
+
+        /* ================= 编译运行新窗口 UI (脱离像素风) ================= */
         
-        /* 动画关键帧 */
+        /* 弹窗遮罩层 */
+        #popup-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.85); z-index: 999;
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s;
+            cursor: default;
+        }
+        #popup-overlay.active { opacity: 1; pointer-events: all; }
+
+        /* Windows 风格窗口外框 */
+        .win-dialog {
+            width: 90%; max-width: 650px; max-height: 85vh;
+            background: #fff; display: flex; flex-direction: column;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            transform: translateY(20px); transition: transform 0.3s;
+            border-radius: 6px; overflow: hidden;
+        }
+        #popup-overlay.active .win-dialog { transform: translateY(0); }
+
+        /* 顶部标题栏 */
+        .win-titlebar {
+            background: #e0e0e0; border-bottom: 1px solid #ccc;
+            padding: 8px 15px; display: flex; justify-content: space-between; align-items: center;
+            font-family: "Microsoft YaHei", "Segoe UI", sans-serif; font-size: 14px; color: #333;
+            user-select: none;
+        }
+        .win-close {
+            width: 24px; height: 24px; background: #ff4747; color: white; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 14px; font-weight: bold; cursor: pointer; border: none;
+        }
+        .win-close:hover { background: #ff1c1c; }
+
+        /* 内容区容器 */
+        .win-content-wrapper {
+            flex: 1; overflow-y: auto; display: flex; justify-content: center;
+            background: #f0f0f0; /* 默认外围背景色 */
+        }
+
+        /* 7大独立风格排版 (严格隔离样式) */
+        
+        .paper-note {
+            width: 100%; padding: 40px; min-height: 300px;
+            /* 重置所有内部文字样式，脱离外层像素风 */
+            text-shadow: none; letter-spacing: normal; cursor: text;
+        }
+
+        /* 1. BUGG: CMD控制台冷峻风 */
+        .style-bugg {
+            background: #0c0c0c; color: #cccccc;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 15px; line-height: 1.6;
+        }
+        .style-bugg .sys-log { color: #888; margin-bottom: 15px; }
+        .style-bugg .sys-err { color: #ff4747; font-weight: bold; margin-bottom: 20px; }
+
+        /* 2. NULL: 极度松散碎碎念 */
+        .style-null {
+            background: #faf8f5; color: #5a5a5a;
+            font-family: "STKaiti", "KaiTi", "Comic Sans MS", cursive;
+            font-size: 18px; text-align: center; line-height: 2.5;
+            display: flex; flex-direction: column; justify-content: center;
+        }
+
+        /* 3. CTRL: 管理员通知 */
+        .style-ctrl {
+            background: #ffffff; color: #333333;
+            font-family: "Helvetica Neue", Helvetica, "Microsoft YaHei", sans-serif;
+            font-size: 16px; line-height: 1.8;
+            border: 4px solid #005fb8; border-radius: 4px; margin: 20px; width: calc(100% - 40px);
+        }
+        .style-ctrl .admin-title {
+            font-size: 22px; font-weight: bold; color: #005fb8;
+            margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; display: flex; align-items: center;
+        }
+
+        /* 4. SOUL: 伪学术报告 */
+        .style-soul {
+            background: #ffffff; color: #000000;
+            font-family: "SimSun", "Times New Roman", serif;
+            font-size: 16px; line-height: 1.8;
+            border: 3px double #000; margin: 20px; width: calc(100% - 40px);
+        }
+        .style-soul .report-title { font-size: 22px; font-weight: bold; text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px; }
+        .style-soul ul { list-style: none; padding: 0; margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 20px;}
+        .style-soul li { margin-bottom: 8px; }
+
+        /* 5. BITE: 小卖部收银单据 */
+        .style-bite {
+            background: #fffdf9; color: #222;
+            font-family: "Courier New", monospace;
+            font-size: 15px; line-height: 1.5;
+            width: 320px; margin: 20px auto; padding: 30px 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-top: 4px dashed #ccc; border-bottom: 4px dashed #ccc;
+        }
+        .style-bite .divider { border-bottom: 1px dashed #222; margin: 15px 0; }
+        .style-bite .receipt-title { font-size: 20px; font-weight: bold; text-align: center; margin-bottom: 5px; }
+
+        /* 6. PRAY: 神秘塔罗解签 */
+        .style-pray {
+            background: #110822; color: #e6c875;
+            font-family: "STZhongsong", "Georgia", serif;
+            font-size: 17px; line-height: 2; text-align: center;
+            border: 2px solid #e6c875; outline: 1px solid #e6c875; outline-offset: -8px;
+        }
+        .style-pray .tarot-title { font-size: 24px; margin-bottom: 25px; letter-spacing: 2px; }
+        .style-pray .sign { font-size: 22px; font-weight: bold; margin: 30px auto; border: 1px solid #e6c875; padding: 10px 20px; display: inline-block; }
+
+        /* 7. HIDDEN: 出厂说明书 */
+        .style-hidden {
+            background: #ffffff; color: #111111;
+            font-family: "Microsoft YaHei", sans-serif;
+            font-size: 16px; line-height: 1.8;
+            border: 5px solid #d9534f; margin: 20px; width: calc(100% - 40px);
+        }
+        .style-hidden .manual-title { font-size: 24px; font-weight: bold; color: #d9534f; margin-bottom: 20px; display: flex; align-items: center;}
+
+        /* 动画 */
         @keyframes flicker { 0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; } 20%, 24%, 55% { opacity: 0.4; } }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
         @keyframes screen-shake {
@@ -198,7 +303,7 @@
             <p style="margin-top: 20px; color: #888;">正在解析隐藏变量...</p>
         </div>
 
-        <!-- 阶段三：结果 -->
+        <!-- 阶段三：结果分析 -->
         <div id="result" class="hidden">
             <div class="cmd-line">>> System output:</div>
             <div class="result-code" id="res-id"></div>
@@ -209,7 +314,27 @@
             <div id="radar-container">
                 <canvas id="radarChart"></canvas>
             </div>
-            <button class="btn" onclick="location.reload()" style="margin-top: 30px;">> sudo reboot</button>
+            
+            <!-- 模拟 IDE 的编译并运行按钮 -->
+            <div style="margin-top: 30px; text-align: center; border-top: 1px dashed #333; padding-top: 20px;">
+                <p style="color: #888; font-size: 18px; margin-bottom: 15px;">>> Ready to compile your personality script...</p>
+                <button class="btn ide-btn" onclick="compileAndRun()">[ ▶ 编译并运行 (Build & Run) ]</button>
+                <button class="btn" onclick="location.reload()">[ ↻ 重置系统 ]</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================= 弹出的 C++ 运行新窗口 ================= -->
+<div id="popup-overlay">
+    <div class="win-dialog">
+        <div class="win-titlebar">
+            <span id="win-title">C:\Windows\System32\cmd.exe</span>
+            <button class="win-close" onclick="closePopup()">×</button>
+        </div>
+        <div class="win-content-wrapper" id="win-content-wrapper">
+            <!-- 不同的 UI 排版会通过 JS 动态注入到这里 -->
+            <div class="paper-note" id="paper-note"></div>
         </div>
     </div>
 </div>
@@ -218,115 +343,216 @@
     const scores = { sike: 0, bailan: 0, kongchang: 0, zouxin: 0, ganfan: 0, xuanxue: 0 };
     let pofang = 0;
     let currentIdx = 0;
+    let currentResKey = "";
 
     const questions = [
-        { text: "写数据结构代码弹出一大堆 Error，你的反应是：", opts: [
-            { t: "深吸一口气平复心情，逐行 Debug", d: "sike" },
-            { t: "怀疑人生，为何心理学人要被指针折磨？！", d: "pofang" },
-            { t: "打开赛博义母 (AI) 寻求救赎", d: "kongchang" },
-            { t: "毁灭吧，去操场刷个步数打卡", d: "ganfan" },
-            { t: "给电脑磕一个，求它行行好", d: "xuanxue" }
+        { text: "Q1：正在写数据结构的作业，经过一个半小时的奋斗，点击运行，结果弹出一大堆Error，此时你的反应是：", opts: [
+            { t: "A. 深吸一口气平复心情，然后开始逐行Debug", d: "sike" },
+            { t: "B. 怀疑人生，为什么我一个学心理的要在这里被指针折磨？！", d: "pofang" },
+            { t: "C. 熟练地打开Gemini/Claude/Deepseek，试图寻找“赛博义母”的救赎。", d: "kongchang" },
+            { t: "D. 算了，毁灭吧，起身去操场散个步顺便刷一次体育打卡", d: "ganfan" },
+            { t: "E. 给电脑磕一个，求它行行好", d: "xuanxue" }
         ]},
-        { text: "看到“我爱我” (525) 这个主题，你第一反应是：", opts: [
-            { t: "自我关怀 (self-care)，很心理学", d: "zouxin" },
-            { t: "来点好吃的奖励自己", d: "ganfan" },
-            { t: "离期末考还有 20 天，压力激增", d: "pofang" },
-            { t: "更爱明天不用早八的自己", d: "bailan" }
+        { text: "Q2: 看到“我爱我” (525) 这个主题，你脑子里最先蹦出的想法是：", opts: [
+            { t: "A. 自我关怀 (self-care)，很心理学。", d: "zouxin" },
+            { t: "B. 来点好吃的奖励自己", d: "ganfan" },
+            { t: "C. 5月25日，离期末考试还有20天，压力激增", d: "pofang" },
+            { t: "D. 爱自己，但更爱明天不用早八的自己", d: "bailan" }
         ]},
-        { text: "面对离散数学里的逻辑推导证明题：", opts: [
-            { t: "“如果 P 那么 Q……我选择 False。”", d: "bailan" },
-            { t: "在草稿纸上画巨大的真值表穷举所有可能", d: "sike" },
-            { t: "瞬间理清逻辑链路，步步推演轻松证毕", d: "kongchang" },
-            { t: "它之所以成立是因为教材写了，愿吃素换它正确", d: "xuanxue" }
+        { text: "Q3：面对离散数学里的逻辑推导证明题：", opts: [
+            { t: "A. “如果P那么Q……算了，我选择False。”", d: "bailan" },
+            { t: "B. 在草稿纸上画出巨大的真值表，试图穷举所有可能性", d: "sike" },
+            { t: "C. 眼神扫过式子瞬间理清逻辑链路，等价置换步步推演，逻辑脉络了然于心轻松证毕", d: "kongchang" },
+            { t: "D. “它之所以成立，是因为教材上这么写了，信女愿一生吃素换这题正确。”", d: "xuanxue" }
         ]},
-        { text: "你的“自我”(Ego) 在弗洛伊德结构中主要扮演：", opts: [
-            { t: "理智调解员，在两端端水", d: "zouxin" },
-            { t: "本我的嘴替，主打“我要快乐”", d: "ganfan" },
-            { t: "超我的傀儡，天天自我 PUA", d: "pofang" },
-            { t: "一个运行时错误 (Runtime Error)，经常崩溃", d: "sike" }
+        { text: "Q4：你的“自我”(Ego) 在弗洛伊德的三我结构中，主要扮演什么角色？", opts: [
+            { t: "A. 理智的调解员，在本我和超我间端水", d: "zouxin" },
+            { t: "B. 本我的嘴替，主打一个“我要快乐”", d: "ganfan" },
+            { t: "C. 超我的傀儡，天天自我PUA。", d: "pofang" },
+            { t: "D. 一个运行时错误 (Runtime Error)，经常崩溃", d: "sike" }
         ]},
-        { text: "你手机里用来对抗焦虑的“终极武器”是：", opts: [
-            { t: "正念冥想 App (最后的倔强)", d: "zouxin" },
-            { t: "外卖 App (多巴胺速效救心丸)", d: "ganfan" },
-            { t: "社交媒体 (逃避可耻但有用)", d: "bailan" },
-            { t: "手机本身 (只要我刷得够快焦虑就追不上我)", d: "kongchang" }
+        { text: "Q5: 你手机里用来对抗焦虑的“终极武器”是：", opts: [
+            { t: "A. 正念冥想App (心理学人最后的倔强)", d: "zouxin" },
+            { t: "B. 美食外卖App (多巴胺速效救心丸)。", d: "ganfan" },
+            { t: "C. 游戏/社交媒体 (逃避可耻但有用)", d: "bailan" },
+            { t: "D. 手机本身 (只要我还在刷，焦虑就追不上我)", d: "kongchang" }
         ]},
-        { text: "朋友倾诉情感问题时，你的大脑模式是：", opts: [
-            { t: "共情模式：我很理解你的情绪...", d: "zouxin" },
-            { t: "CBT 模式：分析一下自动化思维", d: "sike" },
-            { t: "吃瓜模式：细说，然后呢？", d: "kongchang" },
-            { t: "宕机模式：啊这...要不你吃点好的？", d: "ganfan" }
+        { text: "Q6: 当朋友向你倾诉情感问题时，你的大脑自动启动的模式是：", opts: [
+            { t: "A. 共情模式 ：“我很理解你现在的情绪，经历了这么多你已经很棒啦……”", d: "zouxin" },
+            { t: "B. 认知行为疗法模式 ：“我们来分析一下你的自动化思维。”", d: "sike" },
+            { t: "C. 吃瓜模式 ：“细说，然后呢？”", d: "kongchang" },
+            { t: "D. 宕机模式 ：“啊这…要不你吃点好的？”", d: "ganfan" }
         ]},
-        { text: "老师在黑板上推导泰勒展开式，台下的你：", opts: [
-            { t: "已经安详地闭上眼接受脑子被碾压的现实", d: "bailan" },
-            { t: "奋笔疾书，留着今晚慢慢 Debug", d: "sike" },
-            { t: "思绪已经飘到了食堂", d: "ganfan" },
-            { t: "So easy ~ 每一步都轻而易举", d: "kongchang" }
+        { text: "Q7：老师在黑板上疯狂推导多元函数的泰勒展开式，而坐在台下的你：", opts: [
+            { t: "A. 已经安详地闭上了眼睛，接受了脑子被碾压的现实", d: "bailan" },
+            { t: "B. 奋笔疾书，试图把每一个展开项都抄下来，留着今晚慢慢Debug", d: "sike" },
+            { t: "C. 肚子开始咕咕叫，思绪已经飘到了食堂", d: "ganfan" },
+            { t: "D. so easy ~ 每一步都如此轻而易举 ~ ~", d: "kongchang" }
         ]},
-        { text: "半夜 12:30 发现明早有作业要交：", opts: [
-            { t: "安详睡觉。只要我睡着了作业就不存在", d: "bailan" },
-            { t: "惊坐起，一顿狂敲逻辑依旧清晰", d: "sike" },
-            { t: "破防！怒锤床板，求室友借作业参考", d: "pofang" },
-            { t: "觉得今晚不宜动脑，明早 7 点补救", d: "xuanxue" }
+        { text: "Q8：半夜12：30点，你正准备睡觉，突然想起有个作业明早要交，你：", opts: [
+            { t: "A. 安详地闭上眼睛。“只要我睡着了，作业就不存在。”", d: "bailan" },
+            { t: "B. 垂死病中惊坐起，打开电脑一顿狂敲，逻辑依旧清晰", d: "sike" },
+            { t: "C. 破防！怒锤一下床板，然后下床求室友借作业参考", d: "pofang" },
+            { t: "D. 看看星象，觉得今晚不宜动脑，决定明早设个7点的闹钟起来补救", d: "xuanxue" }
         ]},
-        { text: "看到朋友圈有人学到图书馆闭馆：", opts: [
-            { t: "内心 OS：这人指定有点毛病", d: "bailan" },
-            { t: "点个赞，暗暗比较学习时长差距", d: "sike" },
-            { t: "评论：太强了！等下去不去吃烧烤？", d: "ganfan" },
-            { t: "屏蔽此人。我不允许卷王破坏我的松弛感", d: "zouxin" }
+        { text: "Q9：当你看到朋友圈有人发：“今天又在图书馆学到了闭馆，充实的一天~”时：", opts: [
+            { t: "A. 默默滑过去，内心的OS是：“这人指定有点毛病。”", d: "bailan" },
+            { t: "B. 点个赞，并且在心里暗暗比较自己今天的学习时长和他的差距", d: "sike" },
+            { t: "C. 评论：“太强了！顺便问一句晚上去不去吃烧烤？”", d: "ganfan" },
+            { t: "D. 屏蔽此人。我不允许我的朋友圈出现这种破坏我松弛感的卷王", d: "zouxin" }
         ]},
-        { text: "手机屏幕使用时长排第一的应用：", opts: [
-            { t: "B站/抖音 (让 CPU 彻底停转进入 NULL)", d: "bailan" },
-            { t: "CSDN/GitHub/AI (疯狂找报错解法)", d: "sike" },
-            { t: "淘宝/美团 (恩格尔系数极高)", d: "ganfan" },
-            { t: "小红书 (每日阅读量全靠它)", d: "zouxin" }
+        { text: "Q10：你的手机屏幕使用时间报告出来了，排在第一的应用是：", opts: [
+            { t: "A. 哔哩哔哩 / 抖音（只有靠有趣视频才能让CPU彻底停转、进入安详的 NULL 状态）", d: "bailan" },
+            { t: "B. CSDN / GitHub / ChatGPT（被数据结构折磨的日常，每天不是在查指针报错，就是在赛博义母这里疯狂寻找 BUG 的解决方案）", d: "sike" },
+            { t: "C. 淘宝/美团/大众点评（恩格尔系数极高，不是在买就是在吃）", d: "ganfan" },
+            { t: "D. 小红书（学术的尽头是看书，每日阅读量++全靠小红书）", d: "zouxin" }
         ]},
-        { text: "520 那天你在做什么？", opts: [
-            { t: "和对象卿卿我我", d: "zouxin" },
-            { t: "计算：大学找到 Debug 对象的概率是多少？", d: "sike" },
-            { t: "狠狠炫一顿丰盛美食，甩掉杂念", d: "ganfan" },
-            { t: "智者不入爱河，过 520 不如过 525", d: "bailan" }
+        { text: "Q11：520那天，你在：", opts: [
+            { t: "A. 和对象卿卿我我", d: "zouxin" },
+            { t: "B. 愤怒地开始计算：在大学，找到一个愿意和我一起Debug的男/女朋友的概率到底是多少？！", d: "sike" },
+            { t: "C. 满心感慨不如填饱肚子，狠狠炫一顿丰盛美食，把杂念统统甩在身后", d: "ganfan" },
+            { t: "D. 智者不入爱河，过520不如过525", d: "bailan" }
         ]},
-        { text: "你的人生信条最接近哪条指令？", opts: [
-            { t: "if(sad()){ sad_stop(); be_awesome(); }", d: "kongchang" },
-            { t: "while(1){ eat(); sleep(); code(); }", d: "sike" },
-            { t: "try{ everything(); } catch{ do_nothing(); }", d: "bailan" },
-            { t: "printf(\"Hello World, I'm tired.\");", d: "pofang" }
+        { text: "Q12：你的人生信条，最接近以下哪条计算机指令？", opts: [
+            { t: "A. if (sad()) { sad_stop(); be_awesome(); }//如果难过，就停止难过，变得牛逼", d: "kongchang" },
+            { t: "B. while (1) { eat(); sleep(); code(); }//循环：吃、睡、码", d: "sike" },
+            { t: "C. try { everything(); } catch (Exception e) { do_nothing(); }//尝试一切，出错就躺平", d: "bailan" },
+            { t: "D. printf(\"Hello World, I'm tired.\\n\");//输出：世界你好，我累了", d: "pofang" }
         ]},
-        { text: "距离 Deadline 前两小时，你的状态：", opts: [
-            { t: "进入“超脱期”。大不了扣平时分...", d: "bailan" },
-            { t: "肾上腺素飙升，打字速度突破人类极限", d: "sike" },
-            { t: "向各路神仙发誓下次再也不拖延了", d: "xuanxue" },
-            { t: "我从来不会出现这种情况", d: "kongchang" }
+        { text: "Q13：每次快到Deadline前两小时，你的精神状态：", opts: [
+            { t: "A. 进入了一种奇妙的“超脱期”。大不了扣点平时分，还能要了我的命不成？", d: "bailan" },
+            { t: "B. 肾上腺素飙升，打字速度突破人类极限，条理清晰得像个AI。", d: "sike" },
+            { t: "C.一边写一边向各路神仙发誓：“如果这次能过，我下半学期绝对不拖延了！”（下次还敢）", d: "xuanxue" },
+            { t: "D. 我从来不会出现这种情况", d: "kongchang" }
         ]},
-        { text: "电脑剩 5% 电但马上要跑代码且没插座：", opts: [
-            { t: "天意让我不学了，关机下课", d: "bailan" },
-            { t: "屏幕调最低，关闭后台，拼死一搏", d: "sike" },
-            { t: "直接拿着充电器去问学霸能不能借个位", d: "kongchang" },
-            { t: "用手捂住电池试图用体温给电脑供电", d: "xuanxue" }
+        { text: "Q14：教学楼上大课，电脑还剩5%的电，且教室里所有的插座都被人占了，而你马上要跑代码：", opts: [
+            { t: "A. 心安理得地合上电脑：“天意让我今天不学了，下课。”", d: "bailan" },
+            { t: "B. 把屏幕亮度调到最低，关闭所有后台程序，开启极限省电模式拼死一搏。", d: "sike" },
+            { t: "C. 直接拿着充电器冲到前排，厚着脸皮问学霸：“同学能拔下来让我充10分钟吗？救命！”", d: "kongchang" },
+            { t: "D. 用手捂住电池部位，试图用体温给电脑充电，祈祷它能多撑5分钟", d: "xuanxue" }
         ]},
-        { text: "代码输出一堆“烫烫烫”，你的反应：", opts: [
-            { t: "代码说它烫，它该休息了，关机睡觉", d: "bailan" },
-            { t: "心酸地打开 Debug 排查数组越界", d: "sike" },
-            { t: "气得去走廊暴走发泄无名火", d: "ganfan" },
-            { t: "给电脑贴一张退热贴求输出正常数字", d: "xuanxue" }
+        { text: "Q15：《数据结构》作业写到凌晨2点，一跑C语言代码，弹出一大堆“烫烫烫烫烫 ”，你的反应是：", opts: [
+            { t: "A. 关掉电脑，脱衣上床：“代码说它烫，说明它发烧了，该让它休息了。”", d: "bailan" },
+            { t: "B. 熟练又心酸地打开Debug模式，开始逐行排查到底是哪个数组越界或者未初始化", d: "sike" },
+            { t: "C. 气得去走廊里疯狂来回暴走，试图把这股无名火转化为步数发泄掉", d: "ganfan" },
+            { t: "D. 给电脑贴一张退热贴，并在心里默念：“南无阿弥陀佛，求你输出个正常数字吧。”", d: "xuanxue" }
         ]},
-        { text: "如果“爱自己”是一个函数，返回值是？", opts: [
-            { t: "boolean：今天爱了就是 true，简单直接", d: "kongchang" },
-            { t: "float：爱是有程度的，从 0.0 到 1.0", d: "sike" },
-            { t: "String：一句温柔的话", d: "zouxin" },
-            { t: "void：不需要结果，做了就是做了", d: "bailan" }
+        { text: "Q16：最后，如果“爱自己”是一个函数，你觉得它的返回值应该是？", opts: [
+            { t: "A. boolean(布尔值)：今天爱了就是true，没爱就是false，简单直接。", d: "kongchang" },
+            { t: "B. float(浮点数)：爱是有程度的，从0.0到1.0不等。", d: "sike" },
+            { t: "C. String(字符串)：一句对自己说的、温柔的话。", d: "zouxin" },
+            { t: "D. void(无返回值)：爱是一个过程，不需要结果，做了就是做了。", d: "bailan" }
         ]}
     ];
 
     const resultsMap = {
-        sike: { id: "【BUGG】祖传debug仙人", tag: "[ 硬核理智 / 强迫症 / 绝对头铁 ]", quote: "只要我不睡觉，这世上就没有我跑不通的代码！", desc: "你是校园里没有感情的编译程序，大脑皮层刻满了逻辑链。面对报错，你选择狂炫咖啡修仙。你的世界只有True/False。" },
-        bailan: { id: "【NULL】拔线水豚", tag: "[ 极致佛系 / 物理屏蔽 / 节能模式 ]", quote: "只要我闭上眼睛，DDL就永远追不上我。", desc: "你掌握了顶级防御机制：强制格式化自我。面对数理统计的暴击，你精神内核极度稳定。切断电源，焦虑就不存在。" },
-        kongchang: { id: "【CTRL】满级人类", tag: "[ 游刃有余 / 绝对控场 / 降维打击 ]", quote: "人生就像键盘上的Ctrl，只要我在，一切尽在掌控之中。", desc: "你是隐藏的“满级人类”。别人抓耳挠腮时，你已了然于心。你不熬夜死磕，课业只是段优化到极致的算法。你是绝对控场。" },
-        zouxin: { id: "【SOUL】巴甫洛夫", tag: "[ 情绪稳定器 / 灵魂共鸣 / 温柔底色 ]", quote: "爱自己是终身浪漫的开始，而你正在研究这背后的神经机制。", desc: "你保留了心理学人最纯粹的温柔。你是班级行走的“情绪稳定器”，擅长用正念化解尖锐。你是最信赖的赛博树洞。" },
-        ganfan: { id: "【BITE】巴甫洛夫的狗", tag: "[ 快乐至上 / 直肠子 / 本我驱动 ]", quote: "歇斯底里是崩溃，底里歇斯是美味。", desc: "你的“本我”无比强大。不管微积分多烂，闻到食堂饭香 DNA 就会觉醒。你只相信拿到手的奶茶和嘴里的烤肉。" },
-        xuanxue: { id: "【PRAY】量子道士", tag: "[ 放弃科学 / 迷信体质 / 赛博功德 ]", quote: "科学的尽头是神学，代码的尽头是玄学。", desc: "你证明了“心诚则灵”。给电脑贴退热贴、敲电子木鱼是日常基操。你不挂科全靠积攒的赛博功德和锦鲤头像。" },
-        hidden: { id: "【:( / T_T】脆脆鲨", tag: "[ 易碎品 / 紧绷伪装 / 需要抱抱 ]", quote: "只要我不表现出来，就没人知道我刚刚碎了一地。", desc: "🚨 [CRITICAL ERROR] 抽到这个隐藏款的你，辛苦了！外表像鲨鱼般坚硬，内心其实是薄脆威化。今天，请允许自己彻底碎掉一会儿吧，脆弱也是种防御。" }
+        sike: { 
+            id: "【BUGG】祖传debug仙人", tag: "[ 硬核理智 / 强迫症 / 绝对头铁 / 逻辑至上 ]", 
+            quote: "“只要我不睡觉，这世上就没有我跑不通的代码！”", 
+            desc: "你是校园里没有感情的编译程序，大脑皮层刻满了C语言和离散数学的逻辑链。面对满屏飘红的Error和无解的微积分题，普通人选择放弃，而你选择狂炫咖啡，开启极限修仙模式。",
+            winTitle: "C:\\Windows\\System32\\cmd.exe",
+            className: "style-bugg",
+            html: `
+                <div class="sys-log">[System Log] 5月31日 - 异常警告<br>>> 正在检测目标对象精神状态...</div>
+                <div class="sys-err">>> Error: 压力值超出阈值！</div>
+                <p>嘿，满脑子都是逻辑判断的除虫大师。你总是习惯把所有的报错都自己扛下来，一行行去死磕。但人生的Bug是永远修不完的，但你的电量是有限的。</p>
+                <p>强制退出那个死活跑不通的循环吧。今天允许程序报错，允许自己不完美。去喝杯加冰的奶茶，你的系统需要重启了。</p>
+            `
+        },
+        bailan: { 
+            id: "【NULL】拔线水豚", tag: "[ 极致佛系 / 物理屏蔽 / 精神稳定 / 节能模式 ]", 
+            quote: "“只要我闭上眼睛，DDL就永远追不上我。”", 
+            desc: "你掌握了当代大学生最顶级的防御机制：强制格式化自我。面对数理统计的暴击和早八通勤的步步紧逼，你的精神内核极度稳定，宛如一只与世无争的水豚。",
+            winTitle: "无标题 - 记事本",
+            className: "style-null",
+            html: `
+                <p>听说今天是 5月的最后一天？</p>
+                <p>哦，那又怎样。</p>
+                <p>别人都在为了绩点疯狂内卷，<br>只有你早早洞察了宇宙的真理：<br>物理断电，才是最高级的防御。</p>
+                <p>其实，在这个人人都想当永动机的焦虑时代，<br>你的“摆烂”是一种极其稀缺的天赋。</p>
+                <p>今天别管那些DDL了，翻个身，继续睡吧。</p>
+                <p>天塌下来，就当是被子盖。<br>安心做一滩快乐的泥。</p>
+            `
+        },
+        kongchang: { 
+            id: "【CTRL】满级人类", tag: "[ 游刃有余 / 绝对控场 / 降维打击 / 情绪毫无波澜 ]", 
+            quote: "“人生就像键盘上的Ctrl，只要我在，一切尽在掌控之中。”", 
+            desc: "你是传说中隐藏在校园里的“满级人类”，完美诠释了什么是真正的“Ctrl（掌控）”。当别人正为了数据结构的报错抓耳挠腮、被离散数学折磨得怀疑人生时，你只需眼神淡淡扫过屏幕，逻辑脉络便已了然于心。",
+            winTitle: "系统通知 - Administrator",
+            className: "style-ctrl",
+            html: `
+                <div class="admin-title">👑 [来自最高权限的特殊指令]</div>
+                <p>平时你总把一切安排得滴水不漏，无论是复杂的课业还是极限的跨校区通勤，都在你的掌控之中。游刃有余真的很酷，但一直端着“无痛通关”的架子，也很累吧？</p>
+                <p style="font-weight: bold; color: #005fb8; margin: 20px 0;">531特权日：请允许自己暂时注销管理员身份。</p>
+                <p>交出权限，去当一天不用带脑子的“笨蛋”。偶尔的失控并不可怕，毕竟，你才是自己人生最终解释权的拥有者。</p>
+            `
+        },
+        zouxin: { 
+            id: "【SOUL】巴甫洛夫", tag: "[ 情绪稳定器 / 灵魂共鸣 / 温柔底色 / 清醒观察 ]", 
+            quote: "“爱自己是终身浪漫的开始，而你正在研究这背后的神经机制。”", 
+            desc: "你保留了心理学人最纯粹的温柔底色，是班级里行走的“情绪稳定器”。当理科生们为了代码抓狂时，你在一旁冷静又心疼地观察着他们的焦虑反应。",
+            winTitle: "实验报告_最终版.pdf - Adobe Reader",
+            className: "style-soul",
+            html: `
+                <div class="report-title">📋 个人单盲实验记录单 - 531特别签批</div>
+                <ul>
+                    <li><strong>研究对象：</strong>你自己</li>
+                    <li><strong>观察员：</strong>也是你自己</li>
+                    <li><strong>实验状态：</strong><span style="color:#e60000; font-weight:bold;">⚠️ 今日强制中止</span></li>
+                </ul>
+                <p>作为一个合格的“巴甫洛夫”，你实在太习惯用专业视角来解构生活了。遇到压力，你下意识分析这是不是“认知失调”；情绪低落，你马上开始觉察这是哪种“防御机制”。你的大脑里仿佛住着一个严苛的心理学导师，随时随地都在给自己写观察报告。</p>
+                <p style="text-decoration: underline; font-weight:bold; margin-top: 15px;">但在这一天，请立刻停止这种可怕的“理智化”！</p>
+                <p>今天，想吃炸鸡就去吃，别管它是不是“多巴胺代偿”；想发脾气就发脾气，别急着用“课题分离”来压抑自己。爱自己，不需要任何心理学理论来做支撑。今天不写报告，不做觉察，撕掉所有学术标签，去当一个鲜活、任性、拒绝被定义的普通人吧！</p>
+            `
+        },
+        ganfan: { 
+            id: "【BITE】巴甫洛夫的狗", tag: "[ 快乐至上 / 直肠子 / 本我驱动 / 恩格尔系数极高 ]", 
+            quote: "“歇斯底里是崩溃，底里歇斯是美味。”", 
+            desc: "你的“本我（Id）”无比强大，驱动你在这个充满压力的世界里横冲直撞。不管微积分考得多烂，只要下课铃一响，或者闻到食堂的饭香，你的DNA就会瞬间觉醒，分泌出快乐的多巴胺。",
+            winTitle: "POS 机打印输出 - COM3",
+            className: "style-bite",
+            html: `
+                <div class="receipt-title">🧾 今日份快乐补给单</div>
+                <div style="text-align: center;">（已买单）</div>
+                <div class="divider"></div>
+                <div>点单人：快乐干饭王</div>
+                <div>时间：5月31日 全天</div>
+                <div class="divider"></div>
+                <p>你的快乐真的很纯粹，纯粹到让人羡慕！在这个动不动就精神内耗的校园里，你的好胃口就是最强大的武器。</p>
+                <p>别管什么恩格尔系数了，吃到肚子里的肉才是真实的！不管遇到什么糟心事，给自己加个大鸡腿！如果一个不够，那就两个！</p>
+                <div class="divider"></div>
+                <div style="font-size: 20px; font-weight: bold; text-align: center; margin-top: 20px;">吃垮焦虑！冲鸭！</div>
+            `
+        },
+        xuanxue: { 
+            id: "【PRAY】赛博算命师", tag: "[ 放弃科学 / 迷信体质 / 脑洞清奇 / 赛博功德 ]", 
+            quote: "“科学的尽头是神学，代码的尽头是玄学。”", 
+            desc: "你用实际行动证明了“只要心诚，Error也能变成Warning”。在被离散数学和物理实验反复毒打后，你果断放弃了唯物主义。",
+            winTitle: "Astrology_Engine_v3.exe",
+            className: "style-pray",
+            html: `
+                <div class="tarot-title">🔮 531 专属星象与运势揭晓</div>
+                <p>你试图用赛博木鱼敲碎所有DDL，<br>用看星象来决定今天宜不宜写作业。<br>算命师，今天我也要给你算一卦：</p>
+                <div class="sign">【今日签文：上上大吉】</div>
+                <p style="text-align: left;"><strong>解签：</strong> 你以为自己是靠锦鲤头像和玄学活到现在的吗？错啦。那些熬过的夜、敲下的字、死磕过的PPT，才是你真正的护身符。</p>
+                <p style="text-align: left;">今天不用拜各路神仙了，拜拜那个一直没有放弃的自己吧。<br>你，就是你自己的神明。</p>
+            `
+        },
+        hidden: { 
+            id: "【:( / T_T】脆脆鲨", tag: "[ 易碎品 / 紧绷伪装 / 强撑 / 需要抱抱 ]", 
+            quote: "“只要我不表现出来，就没人知道我刚刚碎了一地。”", 
+            desc: "🚨 抽到这个隐藏款的你，辛苦了！你看起来像鲨鱼一样穿着坚硬的铠甲，每天按部就班地上课、打卡、写作业，但实际上，你的内心是一块极其薄脆的威化饼干。",
+            winTitle: "警告 - 产品出厂说明书",
+            className: "style-hidden",
+            html: `
+                <div class="manual-title">⚠️ 脆皮生物出厂说明书 - 补充条款</div>
+                <div style="font-weight: bold; margin-bottom: 20px; font-size: 18px;">恭喜你触发了本次测试的 SSR 隐藏成就！</div>
+                <p>别人看你像一条冷酷的深海巨兽，只有你自己知道，其实你是个一碰就哗啦啦掉渣的威化饼干。你的装甲是用来吓唬 DDL 的，你的内芯是随时准备当场破防的。</p>
+                <p>大家都觉得你情绪稳定，只有你自己知道每天都在申请精神破产的边缘疯狂试探。</p>
+                <p>别装了啦怪累的！既然这次的主题是 525“爱自己”，那就请你理直气壮地“碎”一会儿吧。碎完了记得拿扫把把自己扫回被窝里睡一觉，明天再用万能胶把精神状态粘起来，继续去跟早八对线！</p>
+                <p style="font-size: 14px; color: #666; margin-top: 20px; font-style: italic;">（PS：速吃一块实体脆脆鲨补偿自己，吃的时候允许掉渣！）</p>
+            `
+        }
     };
 
     function startQuiz() {
@@ -338,7 +564,6 @@
     function showQuestion() {
         const q = questions[currentIdx];
         
-        // 更新进度条
         const progressPercent = ((currentIdx) / questions.length) * 100;
         document.getElementById('progress-bar').style.width = progressPercent + '%';
         
@@ -364,7 +589,6 @@
         if (currentIdx < questions.length) {
             showQuestion();
         } else {
-            // 答题结束，进度条拉满
             document.getElementById('progress-bar').style.width = '100%';
             processResult();
         }
@@ -375,7 +599,6 @@
         document.getElementById('calculating').classList.remove('hidden');
         document.getElementById('header-title').innerText = "root@psy-ai:~/analyzing...";
 
-        // 模拟 1.5秒的解码加载过程
         setTimeout(() => {
             document.getElementById('calculating').classList.add('hidden');
             document.getElementById('result').classList.remove('hidden');
@@ -384,33 +607,50 @@
     }
 
     function showResultData() {
-        let resKey = '';
         if (pofang >= 3) {
-            resKey = 'hidden';
+            currentResKey = 'hidden';
             document.getElementById('res-id').classList.add('glitch-text');
         } else {
-            resKey = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+            currentResKey = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
         }
 
-        // 动态修改全局的主题样式！
-        document.body.className = `theme-${resKey}`;
-        document.getElementById('header-title').innerText = `root@psy-ai:~/result/${resKey}.exe`;
+        document.body.className = `theme-${currentResKey}`;
+        document.getElementById('header-title').innerText = `root@psy-ai:~/result/${currentResKey}.exe`;
 
-        const data = resultsMap[resKey];
+        const data = resultsMap[currentResKey];
         document.getElementById('res-id').innerText = data.id;
         document.getElementById('res-tags').innerText = data.tag;
-        document.getElementById('res-quote').innerText = `"${data.quote}"`;
+        document.getElementById('res-quote').innerText = data.quote;
         document.getElementById('res-desc').innerText = data.desc;
 
-        if (resKey !== 'hidden') {
+        if (currentResKey !== 'hidden') {
             drawChart();
         } else {
             document.getElementById('radar-container').style.display = 'none';
         }
     }
 
+    function compileAndRun() {
+        const data = resultsMap[currentResKey];
+        const overlay = document.getElementById('popup-overlay');
+        const noteContainer = document.getElementById('paper-note');
+        
+        // 动态注入窗口标题
+        document.getElementById('win-title').innerText = data.winTitle;
+        
+        // 清除旧的类名，并注入专属的排版类名，彻底隔离像素风样式
+        noteContainer.className = "paper-note " + data.className;
+        noteContainer.innerHTML = data.html;
+        
+        // 弹出窗口
+        overlay.classList.add('active');
+    }
+    
+    function closePopup() {
+        document.getElementById('popup-overlay').classList.remove('active');
+    }
+
     function drawChart() {
-        // 动态获取当前主题的主色调
         const computedStyle = getComputedStyle(document.body);
         const primaryColor = computedStyle.getPropertyValue('--primary').trim();
 
